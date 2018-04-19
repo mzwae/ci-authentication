@@ -77,5 +77,47 @@ class Password extends CI_Controller
         $data['code'] = xss_clean($this->uri->segment(3));
       }
 
+      if ($this->form_validation->run() == false) {
+        $data['usr_email'] = array(
+          'name' => 'usr_email',
+          'class' => 'form-control',
+          'id' => 'usr_email',
+          'type' => 'text',
+          'value' => set_value('usr_email', ''),
+          'maxlength' => '100',
+          'size' =>'35',
+          'placeholder' => 'Your email'
+        );
+
+        $data['usr_password1'] = array(
+          'name' => 'usr_password1',
+          'class' => 'form-control',
+          'id' => 'usr_password1',
+          'type' => 'password',
+          'value' => set_value('usr_password1', ''),
+          'maxlength' => '100',
+          'size' => '35',
+          'placeholder' => 'Type your password'
+        );
+
+        $data['usr_password2'] = array(
+          'name' => 'usr_password2',
+          'class' => 'form-control',
+          'id' => 'usr_password2',
+          'type' => 'password',
+          'value' => set_value('usr_password2', ''),
+          'max-length' => '100',
+          'size' => '35',
+          'placeholder' => 'Confirm password'
+        );
+
+        $this->load->view('templates/header', $data);
+        $this->load->view('users/new_password', $data);
+        $this->load->view('templates/footer', $data);
+      } else {
+        # code...
+      }
+
+
     }
 }
