@@ -115,7 +115,41 @@ class Password extends CI_Controller
         $this->load->view('users/new_password', $data);
         $this->load->view('templates/footer', $data);
       } else {
-        # code...
+        // Does code from input match the code against the email_scripts
+        $email = xss_clean($this->input->post('usr_email'));
+
+        if (!$this->Users_model->does_code_match($data, $email)) {
+          //Code doesn't match
+          redirect('users/forgot_password');
+        } else { //Code match
+          $hash = $this->input->post('usr_password1');
+          $data = array(
+            'usr_hash' => $hash,
+            'usr_email' => $email
+          );
+
+          if ($this->Users_model->update_user_password($data)) {
+            // Send confirmation email to the user
+            $link = 'http://localhost:8080/signin';
+            $result = $this->Users_model->get_user_details_by_email($email);
+
+            foreach ($result->result() as $row) {
+              $usr_fname = $row->usr_fname;
+              $usr_lname = $row->usr_lname;
+            }
+
+            $path = '/application/views/email_scripts/new_password.txt';
+            $file = read_file($path);
+            $file = str_replace('%usr_fname%', $usr_fname, $file);
+            $file = str_replace('%usr_lname%', $usr_lname, $file);
+            $file = str_replace('%password%', $password, $file);
+            $file = str_replace('%link%', $link, $file);
+            if (mail($email, 'New Password', $file, 'From:me@domain.com')) {
+              redirect('signin');
+            }
+          }
+        }
+
       }
 
 
