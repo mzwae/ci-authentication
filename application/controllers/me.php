@@ -176,8 +176,30 @@ class Me extends CI_Controller
           'size' => '35',
           'placeholder' => 'Type your new password here...'
         );
+        $data['usr_new_pw_2'] = array(
+          'name' => 'usr_new_pw_2',
+          'class' => 'form-control',
+          'type' => 'password',
+          'id' => 'usr_new_pw_2',
+          'value' => set_value('usr_new_pw_2', ''),
+          'maxlength' => '100',
+          'size' => '35',
+          'placeholder' => 'Confirm your new password here...'
+        );
+        $data['submit_path'] = 'me/change_password';
+
+        $this->load->view('templates/header', $data);
+        $this->load->view('users/change_password', $data);
+        $this->load->view('templates/footer', $data);
       } else {
-        # code...
+        $hash = $this->input->post('usr_new_pw_1');
+        $data = array(
+          'usr_hash' => $hash,
+          'usr_id' => $this->session->userdata('usr_id')
+        );
+        if ($this->Users_model->update_user_password($data)) {
+          redirect('signin/signout');
+        }
       }
 
     }
