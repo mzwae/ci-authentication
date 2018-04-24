@@ -24,7 +24,27 @@ class Register extends CI_Controller{
       $this->load->view('users/register');
       $this->load->view('templates/footer');
     } else {
-      # code...
+      $password = random_string('alnum', 8);
+      $hash = $password;
+      $data = array(
+        'usr_fname' => $this->input->post('usr_fname'),
+        'usr_lname' => $this->input->post('usr_lname'),
+        'usr_email' => $this->input->post('usr_email'),
+        'usr_is_active' => 1,
+        'usr_access_level' => 2,
+        'usr_hash' => $hash
+      );
+
+      if ($this->Register_model->register_user($data)) {
+        $file = read_file('../views/email_scripts/welcome.txt');
+        $file = str_replace('%usr_fname%', $data['usr_fname'], $file);
+        $file = str_replace('%usr_lname%', $data['usr_lname'], $file);
+        $file = str_replace('%password%', $password, $file);
+        redirect('signin');
+      } else {
+        redirect('register');
+      }
+
     }
 
   }
