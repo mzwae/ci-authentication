@@ -20,65 +20,65 @@ class Password extends CI_Controller
         redirect('password/forgot_password');
     }
 
-    public function forgot_password(){
-      $this->form_validation->set_rules('usr_email', 'User Email', 'required|valid_email');
+    public function forgot_password()
+    {
+        $this->form_validation->set_rules('usr_email', 'User Email', 'required|valid_email');
 
-      if ($this->form_validation->run() == false) {
-        $this->load->view('templates/header');
-        $this->load->view('users/forgot_password');
-        $this->load->view('templates/footer');
-      } else {
-        $email = $this->input->post(usr_email);
-        $num_res = $this->Users_model->count_results($email);
-        if ($num_res == 1) {
-          $code = $this->Users_model->make_code();
-          $data = array(
+        if ($this->form_validation->run() == false) {
+            $this->load->view('templates/header');
+            $this->load->view('users/forgot_password');
+            $this->load->view('templates/footer');
+        } else {
+            $email = $this->input->post(usr_email);
+            $num_res = $this->Users_model->count_results($email);
+            if ($num_res == 1) {
+                $code = $this->Users_model->make_code();
+                $data = array(
             'usr_pwd_change_code' => $code,
             'usr_email' => $email
           );
-          if ($this->Users_model->update_user_code($data)) {
-            // If updated successfully, send Email
-            $result = $this->Users_model->get_user_details_by_email($email);
+                if ($this->Users_model->update_user_code($data)) {
+                    // If updated successfully, send Email
+                    $result = $this->Users_model->get_user_details_by_email($email);
 
-            foreach ($result->result() as $row) {
-              $usr_fname = $row->usr_fname;
-              $usr_lname = $row->usr_lname;
+                    foreach ($result->result() as $row) {
+                        $usr_fname = $row->usr_fname;
+                        $usr_lname = $row->usr_lname;
+                    }
+
+                    $link = "http://localhost:8080/password/new_password/".$code;
+                    $path = 'views/email_scripts/reset_password.txt';
+                    $file = read_file($path);
+                    $file = str_replace('%usr_fname%', $usr_fname, $file);
+                    $file = str_replace('%usr_lname%', $usr_lname, $file);
+                    echo $file = str_replace('%link%', $link, $file);
+
+                    if (mail($email, 'Reset your password.', $file, 'From:me@domain.com')) {
+                        redirect('signin');
+                    } else {
+                        // Some sort of error happened, redirect user back to form
+                        redirect('password/forgot_password');
+                    }
+                }
             }
-
-            $link = "http://localhost:8080/password/new_password/".$code;
-            $path = 'views/email_scripts/reset_password.txt';
-            $file = read_file($path);
-            $file = str_replace('%usr_fname%', $usr_fname, $file);
-            $file = str_replace('%usr_lname%', $usr_lname, $file);
-            echo $file = str_replace('%link%', $link, $file);
-
-            if (mail($email,'Reset your password.', $file, 'From:me@domain.com')) {
-              redirect('signin');
-            } else {
-              // Some sort of error happened, redirect user back to form
-              redirect('password/forgot_password');
-            }
-
-          }
         }
-      }
-
     }
 
-    public function new_password(){
-      $this->form_validation->set_rules('code', 'Signin new password code', 'required');
-      $this->form_validation->set_rules('usr_email', 'User email', 'required');
-      $this->form_validation->set_rules('usr_password1', 'User password', 'required');
-      $this->form_validation->set_rules('usr_password2', 'Confirmed password', 'required|matches[usr_password1]');
+    public function new_password()
+    {
+        $this->form_validation->set_rules('code', 'Signin new password code', 'required');
+        $this->form_validation->set_rules('usr_email', 'User email', 'required');
+        $this->form_validation->set_rules('usr_password1', 'User password', 'required');
+        $this->form_validation->set_rules('usr_password2', 'Confirmed password', 'required|matches[usr_password1]');
 
-      if ($this->input->post()) {
-        $data['code'] = xss_clean($this->input->post('code'));
-      } else {
-        $data['code'] = xss_clean($this->uri->segment(3));
-      }
+        if ($this->input->post()) {
+            $data['code'] = xss_clean($this->input->post('code'));
+        } else {
+            $data['code'] = xss_clean($this->uri->segment(3));
+        }
 
-      if ($this->form_validation->run() == false) {
-        $data['usr_email'] = array(
+        if ($this->form_validation->run() == false) {
+            $data['usr_email'] = array(
           'name' => 'usr_email',
           'class' => 'form-control',
           'id' => 'usr_email',
@@ -89,7 +89,7 @@ class Password extends CI_Controller
           'placeholder' => 'Your email'
         );
 
-        $data['usr_password1'] = array(
+            $data['usr_password1'] = array(
           'name' => 'usr_password1',
           'class' => 'form-control',
           'id' => 'usr_password1',
@@ -100,7 +100,7 @@ class Password extends CI_Controller
           'placeholder' => 'Type your password'
         );
 
-        $data['usr_password2'] = array(
+            $data['usr_password2'] = array(
           'name' => 'usr_password2',
           'class' => 'form-control',
           'id' => 'usr_password2',
@@ -111,47 +111,44 @@ class Password extends CI_Controller
           'placeholder' => 'Confirm password'
         );
 
-        $this->load->view('templates/header', $data);
-        $this->load->view('users/new_password', $data);
-        $this->load->view('templates/footer', $data);
-      } else {
-        // Does code from input match the code against the email_scripts
-        $email = xss_clean($this->input->post('usr_email'));
+            $this->load->view('templates/header', $data);
+            $this->load->view('users/new_password', $data);
+            $this->load->view('templates/footer', $data);
+        } else {
+            // Does code from input match the code against the email_scripts
+            $email = xss_clean($this->input->post('usr_email'));
 
-        if (!$this->Users_model->does_code_match($data, $email)) {
-          //Code doesn't match
-          redirect('users/forgot_password');
-        } else { //Code match
-          $hash = $this->input->post('usr_password1');
-          $data = array(
+            if (!$this->Users_model->does_code_match($data, $email)) {
+                //Code doesn't match
+                redirect('users/forgot_password');
+            } else { //Code match
+                $hash = $this->input->post('usr_password1');
+                $data = array(
             'usr_hash' => $hash,
             'usr_email' => $email
           );
 
-          if ($this->Users_model->update_user_password($data)) {
-            // Send confirmation email to the user
-            $link = 'http://localhost:8080/signin';
-            $result = $this->Users_model->get_user_details_by_email($email);
+                if ($this->Users_model->update_user_password($data)) {
+                    // Send confirmation email to the user
+                    $link = 'http://localhost:8080/signin';
+                    $result = $this->Users_model->get_user_details_by_email($email);
 
-            foreach ($result->result() as $row) {
-              $usr_fname = $row->usr_fname;
-              $usr_lname = $row->usr_lname;
-            }
+                    foreach ($result->result() as $row) {
+                        $usr_fname = $row->usr_fname;
+                        $usr_lname = $row->usr_lname;
+                    }
 
-            $path = '/application/views/email_scripts/new_password.txt';
-            $file = read_file($path);
-            $file = str_replace('%usr_fname%', $usr_fname, $file);
-            $file = str_replace('%usr_lname%', $usr_lname, $file);
-            $file = str_replace('%password%', $password, $file);
-            $file = str_replace('%link%', $link, $file);
-            if (mail($email, 'New Password', $file, 'From:me@domain.com')) {
-              redirect('signin');
+                    $path = '/application/views/email_scripts/new_password.txt';
+                    $file = read_file($path);
+                    $file = str_replace('%usr_fname%', $usr_fname, $file);
+                    $file = str_replace('%usr_lname%', $usr_lname, $file);
+                    $file = str_replace('%password%', $password, $file);
+                    $file = str_replace('%link%', $link, $file);
+                    if (mail($email, 'New Password', $file, 'From:me@domain.com')) {
+                        redirect('signin');
+                    }
+                }
             }
-          }
         }
-
-      }
-
-
     }
 }

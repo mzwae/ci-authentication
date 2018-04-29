@@ -11,6 +11,8 @@ class MY_Controller extends CI_Controller
         $this->load->helper('form');
         $this->load->helper('url');
         $this->load->helper('security');
-      
+        $this->load->library('session');
+        $this->load->library('form_validation');
+        $this->form_validation->set_error_delimiters('<div class="alert alert-warning" role="alert">', '</div>');
     }
 }

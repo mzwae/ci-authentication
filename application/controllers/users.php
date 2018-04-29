@@ -31,7 +31,7 @@ class Users extends MY_Controller
         $this->form_validation->set_rules('usr_lname', 'Last Name', 'required');
         $this->form_validation->set_rules('usr_uname', 'Username', 'required');
         $this->form_validation->set_rules('usr_email', 'Email', 'required|valid_email|is_unique[users.usr_email]');
-        $this->form_validation->set_rules('usr_confirm_email', 'Confirm Email', 'required|valid_email|matches[usr_email]');
+        $this->form_validation->set_rules('usr_confirm_email', 'Confirm Email','required|valid_email|matches[usr_email]');
         $this->form_validation->set_rules('usr_add1', 'Address Line 1', 'required');
         $this->form_validation->set_rules('usr_add2', 'Address Line 2', 'required');
         $this->form_validation->set_rules('usr_add3', 'Address Line 3', 'required');
