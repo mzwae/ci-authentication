@@ -29,7 +29,7 @@ class Password extends CI_Controller
             $this->load->view('users/forgot_password');
             $this->load->view('templates/footer');
         } else {
-            $email = $this->input->post(usr_email);
+            $email = $this->input->post('usr_email');
             $num_res = $this->Users_model->count_results($email);
             if ($num_res == 1) {
                 $code = $this->Users_model->make_code();
