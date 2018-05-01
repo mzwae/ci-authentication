@@ -7,7 +7,7 @@ class Users extends MY_Controller
         parent::__construct();
         $this->load->helper('file');
         $this->load->model('Users_model');
-        $this->load->helper('Password_model');
+        $this->load->model('Password_model');
 
         if (($this->session->userdata('loggedin') == false) || ($this->session->userdata('usr_access_level') != 1)) {
             redirect('signin');

@@ -24,7 +24,7 @@ class Users_model extends CI_Model
     public function process_update_user($id, $data)
     {
         $this->db->where('usr_id', $id);
-        if ($his->db->update('users', $data)) {
+        if ($this->db->update('users', $data)) {
             return true;
         } else {
             return false;

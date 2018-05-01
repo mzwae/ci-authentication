@@ -25,6 +25,15 @@
               <li class="nav-item"><a href="<?=base_url()?>about">About</a></li>
 
           </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <?php if (!$this->session->userdata('logged_in')) : ?>
+              <li><a href="<?=base_url();?>signin">Login</a></li>
+              <li><a href="<?=base_url();?>register">Register</a></li>
+            <?php endif; ?>
+            <?php if ($this->session->userdata('logged_in')) : ?>
+              <li><a href="<?=base_url();?>signin/signout">Logout</a></li>
+            <?php endif; ?>
+          </ul>
       </div>
     </div>
 </nav>

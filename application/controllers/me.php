@@ -38,6 +38,7 @@ class Me extends CI_Controller
 
         $data['id'] = $this->session->userdata('usr_id');
 
+
         $data['page_heading'] = "Edit my details";
 
         if ($this->form_validation->run() == false) {
@@ -153,6 +154,9 @@ class Me extends CI_Controller
             'usr_town_city' => $this->input->post('usr_town_city'),
             'usr_zip_pcode' => $this->input->post('usr_zip_pcode')
           );
+
+          $id = $this->session->userdata('usr_id');
+
 
           if ($this->Users_model->process_update_user($id, $data)) {
             redirect('users');

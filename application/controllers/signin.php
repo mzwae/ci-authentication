@@ -37,7 +37,7 @@ class Signin extends CI_Controller
                 $query = $this->Signin_model->does_user_exist($usr_email);
                 if ($query->num_rows() == 1) {// One matching row found
                     foreach ($query->result() as $row) {
-                        $hash = $passowrd;
+                        $hash = $password;
                         if ($row->usr_is_active != 0) {
                             if ($hash != $row->usr_hash) {
                                 $data['login_fail'] = true;

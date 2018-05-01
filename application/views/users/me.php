@@ -6,19 +6,19 @@
 
 <?php echo form_open('me/index', 'role="form" class="form"'); ?>
 <div class="form-group">
-  <?php echo form_error(usr_fname); ?>
+  <?php echo form_error('usr_fname'); ?>
   <label for="usr_fname">First Name</label>
   <?php echo form_input($usr_fname); ?>
 </div>
 
 <div class="form-group">
-  <?php echo form_error(usr_lname); ?>
+  <?php echo form_error('usr_lname'); ?>
   <label for="usr_lname">Last Name</label>
   <?php echo form_input($usr_lname); ?>
 </div>
 
 <div class="form-group">
-  <?php echo form_error(usr_uname); ?>
+  <?php echo form_error('usr_uname'); ?>
   <label for="usr_uname">Username</label>
   <?php echo form_input($usr_uname); ?>
 </div>
@@ -44,6 +44,11 @@
 <div class="form-group">
   <label for="usr_add3">Address 3</label>
   <?php echo form_input($usr_add3); ?>
+</div>
+
+<div class="form-group">
+  <label for="usr_town_city">Town/City</label>
+  <?php echo form_input($usr_town_city); ?>
 </div>
 
 <div class="form-group">
