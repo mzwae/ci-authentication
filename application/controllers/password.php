@@ -124,9 +124,9 @@ class Password extends CI_Controller
             } else { //Code match
                 $hash = $this->input->post('usr_password1');
                 $data = array(
-            'usr_hash' => $hash,
-            'usr_email' => $email
-          );
+                  'usr_hash' => $hash,
+                  'usr_email' => $email
+                );
 
                 if ($this->Users_model->update_user_password($data)) {
                     // Send confirmation email to the user

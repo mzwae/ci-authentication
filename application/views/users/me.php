@@ -64,6 +64,5 @@
 </div>
 
 <?php echo form_close(); ?>
-</div>
-
  <a href="me/pwd_email/<?=$id?>">Reset Email</a>
+</div>
