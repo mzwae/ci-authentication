@@ -41,13 +41,16 @@ class Register extends CI_Controller
             );
 
             if ($this->Register_model->register_user($data)) {
-                $file = read_file('../views/email_scripts/welcome.txt');
+                $file = file_get_contents('application/views/email_scripts/welcome.txt');
                 $file = str_replace('%usr_fname%', $data['usr_fname'], $file);
                 $file = str_replace('%usr_lname%', $data['usr_lname'], $file);
                 $file = str_replace('%password%', $password, $file);
                 $email = $data['usr_email'];
-                if (mail($email, 'New Password', $file, 'From:me@domain.com')) {
+                if (mail($email, 'New Password', $file, 'From: onmonjaie@gmail.com')) {
+
                     redirect('signin');
+                    // die($file);
+
                 }
             } else {
                 redirect('register');
